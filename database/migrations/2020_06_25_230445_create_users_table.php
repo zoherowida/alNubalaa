@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique()->notNullable();
             $table->string('phoneNumber')->unique();
             $table->string('password');
-            $table->string('api_key');
+            $table->string('api_key')->nullable();
             $table->timestamps();
         });
     }

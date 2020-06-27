@@ -27,20 +27,21 @@ class ClientController extends Controller
 
     public function create(Request $request){
         $this->validate($request, [
-            'name' => 'required',
+            'clientName' => 'required',
+            'companyName' => 'required',
             'subCategory' => 'required',
             'phoneNumber' => 'required',
-            'phone' => 'required',
             'city' => 'required',
             'location' => 'required',
             'latLong' => 'required',
          ]);
         try {
             $client = new Client;
-            $client->name = $request->input('name');
+            $client->clientName = $request->input('clientName');
+            $client->companyName = $request->input('companyName');
             $client->subCategory = $request->input('subCategory');
             $client->phoneNumber = $request->input('phoneNumber');
-            $client->phone = $request->input('phone');
+            $client->phoneCompany = $request->input('phoneCompany');
             $client->city = $request->input('city');
             $client->location = $request->input('location');
             $client->latLong = $request->input('latLong');
@@ -61,24 +62,23 @@ class ClientController extends Controller
 
     public function update($id, Request $request){
         $this->validate($request, [
-            'name' => 'required',
+            'clientName' => 'required',
+            'companyName' => 'required',
             'subCategory' => 'required',
             'phoneNumber' => 'required',
-            'phone' => 'required',
             'city' => 'required',
             'location' => 'required',
             'latLong' => 'required',
          ]);
         try {
-            $client = Client::with('user')->find($id);
-            $client->name = $request->input('name');
+            $client->clientName = $request->input('clientName');
+            $client->companyName = $request->input('companyName');
             $client->subCategory = $request->input('subCategory');
             $client->phoneNumber = $request->input('phoneNumber');
-            $client->phone = $request->input('phone');
+            $client->phoneCompany = $request->input('phoneCompany');
             $client->city = $request->input('city');
             $client->location = $request->input('location');
             $client->latLong = $request->input('latLong');
-            $client->AddBy = Auth::id();
 
             $client->save();
 

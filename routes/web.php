@@ -12,6 +12,7 @@
 */
 
 $router->get('/', function () use ($router) {
+return 'Not Found';
     return $router->app->version();
 });
 

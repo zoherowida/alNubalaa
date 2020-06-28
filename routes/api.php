@@ -23,7 +23,7 @@ Route::post('login', 'Api\UserController@login');
 Route::post('register', 'Api\UserController@register');
 
 
-Route::group(['middleware' => ['auth:api','cors']], function(){
+Route::group(['middleware' => ['auth:api']], function(){
 
     // Category Routes
     Route::post('category/all','Api\CategoryController@index');

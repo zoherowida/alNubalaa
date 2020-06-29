@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Category;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
@@ -71,10 +71,9 @@ class CategoryController extends Controller
         }
     }
 
-    public function destroy($id){
-        $category = Category::get();
-        return response()->json(['message' => 'success','category' => $category], 200);
-        return $category;
+    public function destroy(Categoy $id){
+        $category = $id->delete();
+        return response()->json(['status' => 200, 'message' => 'delete','data' => ''], 200);
     }
 
 

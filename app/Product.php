@@ -2,8 +2,21 @@
 
 namespace App;
 
+use App\Enums\SubCategory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
+/**
+ * Class Product
+ * @package App
+ *
+ * @property string name
+ * @property Category categoryId
+ * @property double wholesalePrice
+ * @property double sellingPrice
+ * @property int subCategory
+
+ */
 
 class Product extends Model
 
@@ -23,11 +36,7 @@ class Product extends Model
      */
     public function getSubCategoryNameAttribute(){
 
-        if($this->subCategory === 1) {
-            return 'مكتبة' ;
-        } else if($this->subCategory === 2){
-            return 'شركة' ;
-        }
+        return SubCategory::parse($this->subCategory);
 
     }
 

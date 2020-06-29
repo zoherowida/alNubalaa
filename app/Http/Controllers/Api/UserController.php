@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -15,7 +17,7 @@ class UserController extends Controller
     /**
      * login api
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function login(){
         if(Auth::attempt(['phoneNumber' => request('phoneNumber'), 'password' => request('password')])){
@@ -29,17 +31,19 @@ class UserController extends Controller
             return response()->json(['status'=> 401, 'error'=>'Unauthorised'], 401);
         }
     }
+
     /**
      * Register api
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'email' => 'required|email',
-            'phoneNumber' => 'required',
+            'email' => 'required|email|unique:users',
+            'phoneNumber' => 'required|unique:users',
             'password' => 'required',
             'c_password' => 'required|same:password',
         ]);
@@ -56,7 +60,7 @@ class UserController extends Controller
     /**
      * details api
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function details()
     {

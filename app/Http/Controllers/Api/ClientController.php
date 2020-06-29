@@ -4,101 +4,88 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use App\Client;
+
 class ClientController extends Controller
 {
-        public function index(Request $request){
+    public function index(Request $request){
 
-            try {
+        try {
             $client = Client::with('user')->get();
             return response()->json(['status' => 200,'message' => 'success','data' => $client], 200);
 
-            } catch(\Exception $e){
-                return response()->json(['status' => 409,'message' => $e], 409);
-            }
+        } catch(\Exception $e){
+            return response()->json(['status' => 409,'message' => $e], 409);
         }
+    }
 
-        public function create(Request $request){
+    public function create(Request $request){
         $validator = Validator::make($request->all(), [
-                'clientName' => 'required',
-                'companyName' => 'required',
-                'subCategory' => 'required',
-                'phoneNumber' => 'required',
-                'city' => 'required',
-                'location' => 'required',
-                'latLong' => 'required',
-             ]);
-                          if ($validator->fails()) {
-                          return response()->json(['status'=> 401, 'error'=>$validator->errors()], 401);
-                          }
-
-            try {
-                $client = new Client;
-                $client->clientName = $request->input('clientName');
-                $client->companyName = $request->input('companyName');
-                $client->subCategory = $request->input('subCategory');
-                $client->phoneNumber = $request->input('phoneNumber');
-                $client->phoneCompany = $request->input('phoneCompany');
-                $client->city = $request->input('city');
-                $client->location = $request->input('location');
-                $client->latLong = $request->input('latLong');
-                $client->AddBy = Auth::id();
-
-                $client->save();
-
-                //return successful response
-                return response()->json(['status' => 200,'message' => 'created', 'data' => $client], 201);
-            }
-            catch(\Exception $e){
-
-                //return error message
-                return response()->json(['status' => 409,'message' => $e], 409);
-
-            }
+            'clientName' => 'required',
+            'companyName' => 'required',
+            'subCategory' => 'required',
+            'phoneNumber' => 'required',
+            'latLong' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['status'=> 401, 'error'=>$validator->errors()], 401);
         }
 
-        public function update($id, Request $request){
+        try {
+            $input = $request->all();
+            $input['AddBy'] = Auth::user()->id;
+            $client = Client::create($input);
+            return response()->json(['status' => 200,'message' => 'created', 'data' => $client], 201);
+        }
+        catch(\Exception $e){
+
+            //return error message
+            return response()->json(['status' => 409,'message' => $e], 409);
+
+        }
+    }
+
+    public function update($id, Request $request){
+
         $validator = Validator::make($request->all(), [
-                'clientName' => 'required',
-                'companyName' => 'required',
-                'subCategory' => 'required',
-                'phoneNumber' => 'required',
-                'city' => 'required',
-                'location' => 'required',
-                'latLong' => 'required',
-             ]);
-                          if ($validator->fails()) {
-                          return response()->json(['status'=> 401, 'error'=>$validator->errors()], 401);
-                          }
+            'clientName' => 'required',
+            'companyName' => 'required',
+            'subCategory' => 'required',
+            'phoneNumber' => 'required',
+            'latLong' => 'required',
+        ]);
 
-            try {
-                $client->clientName = $request->input('clientName');
-                $client->companyName = $request->input('companyName');
-                $client->subCategory = $request->input('subCategory');
-                $client->phoneNumber = $request->input('phoneNumber');
-                $client->phoneCompany = $request->input('phoneCompany');
-                $client->city = $request->input('city');
-                $client->location = $request->input('location');
-                $client->latLong = $request->input('latLong');
-
-                $client->save();
-
-                //return successful response
-                return response()->json(['status' => 200,'message' => 'updated', 'data' => $client], 201);
-            }
-            catch(\Exception $e){
-
-                //return error message
-                return response()->json(['status' => 409,'message' => $e], 409);
-
-            }
+        if ($validator->fails()) {
+            return response()->json(['status'=> 401, 'error'=>$validator->errors()], 401);
         }
 
-        public function destroy($id){
-            $category = Category::get();
-            return response()->json(['status' => 200,'message' => 'success','data' => $category], 200);
-            return $category;
+        try {
+                $client = Client::find($id)->update(
+                [
+                    'clientName'=>$request->input('clientName'),
+                    'companyName'=>$request->input('companyName'),
+                    'subCategory'=>$request->input('subCategory'),
+                    'phoneNumber'=>$request->input('phoneNumber'),
+                    'phoneCompany'=>$request->input('phoneCompany'),
+                    'city'=>$request->input('city'),
+                    'location'=>$request->input('location'),
+                    'latLong'=>$request->input('latLong'),
+                ]);
+            return response()->json(['status' => 200,'message' => 'updated', 'data' => $client], 201);
         }
+        catch(\Exception $e){
+
+            //return error message
+            return response()->json(['status' => 409,'message' => $e], 409);
+
+        }
+    }
+
+    public function destroy(Client $id){
+        $client = $id->delete();
+        return response()->json(['status' => 200, 'message' => 'delete','data' => ''], 200);
+    }
 
 }

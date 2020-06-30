@@ -11,7 +11,7 @@ class ProductController extends Controller
 {
     public function index(Request $request){
         try {
-            $product = Product::with('category')->get();
+            $product = Product::with('category')->orderBy('id', 'desc')->get();
             return response()->json(['status' => 200,'message' => 'success','data' => $product], 200);
         } catch(\Exception $e){
             //return error message
@@ -29,7 +29,7 @@ class ProductController extends Controller
             'subCategory' => 'required',
         ]);
         if ($validator->fails()) {
-            return response()->json(['status'=> 401, 'error'=>$validator->errors()], 401);
+            return response()->json(['status'=> 400, 'error'=>$validator->errors()], 400);
         }
 
         try {
@@ -62,7 +62,7 @@ class ProductController extends Controller
             'subCategory' => 'required',
         ]);
         if ($validator->fails()) {
-            return response()->json(['status'=> 401, 'error'=>$validator->errors()], 401);
+            return response()->json(['status'=> 400, 'error'=>$validator->errors()], 400);
         }
 
         try {

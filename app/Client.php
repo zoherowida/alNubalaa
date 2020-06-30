@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Enums\City;
 use App\Enums\SubCategory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -39,7 +40,8 @@ class Client extends Model
 
 
     protected $appends = [
-        'subCategoryName'
+        'subCategoryName',
+        'cityName'
     ];
     /**
      * @var mixed
@@ -52,13 +54,13 @@ class Client extends Model
      */
 
     public function getSubCategoryNameAttribute(){
+        if($this->subCategory == null) return '';
+        return SubCategory::parse($this->subCategory);
+    }
+    public function getCityNameAttribute(){
+        if($this->city == null) return '';
 
-        if($this->subCategory === 1) {
-            return 'مكتبة' ;
-        } else {
-            return 'شركة' ;
-        }
-
+        return City::parse((int)$this->city);
     }
 
     public function user()

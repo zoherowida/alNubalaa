@@ -21,7 +21,7 @@ class CreateProductsTable extends Migration
             $table->string('wholesalePrice');
             $table->integer('subCategory');
             $table->timestamps();
-                $table->softDeletes();
+            $table->softDeletes();
 
         });
     }

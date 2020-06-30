@@ -18,7 +18,7 @@ class CreateClientsTable extends Migration
             $table->string('clientName');
             $table->string('companyName');
             $table->integer('subCategory');
-            $table->string('city');
+            $table->integer('city');
             $table->string('location');
             $table->string('phoneNumber');
             $table->string('phoneCompany')->nullable();

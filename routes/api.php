@@ -1,6 +1,6 @@
 <?php
 
-header('Access-Control-Allow-Origin: http://localhost:8300');
+header('Access-Control-Allow-Origin: http://localhost:8302');
 header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: *,x-xsrf-token,token,content-type');
@@ -18,6 +18,11 @@ use Illuminate\Http\Request;
 |
 */
 //
+
+
+Route::fallback(function () {
+    return response()->json(['error' => 'Not Found!'], 404);
+});
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
@@ -44,6 +49,10 @@ Route::group(['middleware' => ['auth:api','cors']], function(){
     Route::post('client/all','Api\ClientController@index');
     Route::post('client/create','Api\ClientController@create');
     Route::post('client/update/{id}','Api\ClientController@update');
+
+    // Questionnaire Route
+    Route::post('questionnaire/create','Api\QuestionnaireController@store');
+
 });
 
 

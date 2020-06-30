@@ -13,7 +13,7 @@ class ClientController extends Controller
     public function index(Request $request){
 
         try {
-            $client = Client::with('user')->get();
+            $client = Client::with('user')->orderBy('id', 'desc')->get();
             return response()->json(['status' => 200,'message' => 'success','data' => $client], 200);
 
         } catch(\Exception $e){
@@ -30,7 +30,7 @@ class ClientController extends Controller
             'latLong' => 'required',
         ]);
         if ($validator->fails()) {
-            return response()->json(['status'=> 401, 'error'=>$validator->errors()], 401);
+            return response()->json(['status'=> 400, 'error'=>$validator->errors()], 400);
         }
 
         try {
@@ -55,10 +55,11 @@ class ClientController extends Controller
             'subCategory' => 'required',
             'phoneNumber' => 'required',
             'latLong' => 'required',
+            'location' => 'required',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['status'=> 401, 'error'=>$validator->errors()], 401);
+            return response()->json(['status'=> 400, 'error'=>$validator->errors()], 400);
         }
 
         try {

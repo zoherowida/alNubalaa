@@ -12,8 +12,8 @@ class CategoryController extends Controller
     public function index(Request $request){
 
         try {
-        $category = Category::get();
-        return response()->json(['status' => 200,'message' => 'success','data' => $category], 200);
+            $category = Category::orderBy('id', 'desc')->get();
+            return response()->json(['status' => 200,'message' => 'success','data' => $category], 200);
 
         } catch(\Exception $e){
             return response()->json(['status' => 409,'message' => $e], 409);
@@ -24,10 +24,10 @@ class CategoryController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
-         ]);
-             if ($validator->fails()) {
-             return response()->json(['status'=> 401, 'error'=>$validator->errors()], 401);
-             }
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['status'=> 400, 'error'=>$validator->errors()], 400);
+        }
 
         try {
             $category = new Category;
@@ -49,10 +49,10 @@ class CategoryController extends Controller
     public function update($id, Request $request){
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
-         ]);
-                      if ($validator->fails()) {
-                      return response()->json(['status'=> 401, 'error'=>$validator->errors()], 401);
-                      }
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['status'=> 400, 'error'=>$validator->errors()], 400);
+        }
 
         try {
             $category = Category::find($id);

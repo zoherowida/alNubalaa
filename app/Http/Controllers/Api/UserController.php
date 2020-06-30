@@ -48,7 +48,7 @@ class UserController extends Controller
             'c_password' => 'required|same:password',
         ]);
         if ($validator->fails()) {
-            return response()->json(['status'=> 401, 'error'=>$validator->errors()], 401);
+            return response()->json(['status'=> 400, 'error'=>$validator->errors()], 400);
         }
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);

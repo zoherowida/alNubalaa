@@ -8,11 +8,22 @@ use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Vali2dator;
 
 class UserController extends Controller
 {
     public $successStatus = 200;
+
+    public function index() {
+        try {
+            $user = User::get();
+            return response()->json(['status'=> $this-> successStatus,'message'=>'success', 'data' => $user], $this-> successStatus);
+
+        }
+        catch(\Exception $e){
+            return response()->json(['status' => 409,'message' => $e], 409);
+        }
+    }
 
     /**
      * login api
@@ -23,7 +34,7 @@ class UserController extends Controller
         if(Auth::attempt(['phoneNumber' => request('phoneNumber'), 'password' => request('password')])){
             $user = Auth::user();
             $success['token'] =  $user->createToken('MyApp')-> accessToken;
-            $success['role'] =  1;
+            $success['role'] =  $user->role_id;
             return response()->json(['status'=> $this-> successStatus,'message'=>'success', 'data' => $success], $this-> successStatus);
 
         }

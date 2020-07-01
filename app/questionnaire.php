@@ -5,6 +5,17 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * Class Questionnaire
+ * @package App
+ *
+ * @property string name
+ * @property int productId
+ * @property string price
+ * @property string clientId
+ * @property string discount
+ */
+
 class questionnaire extends Model
 {
     use SoftDeletes;

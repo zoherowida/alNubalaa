@@ -1,6 +1,6 @@
 <?php
 
-header('Access-Control-Allow-Origin: http://localhost:8302');
+header('Access-Control-Allow-Origin: http://localhost:8003');
 header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: *,x-xsrf-token,token,content-type');
@@ -36,22 +36,29 @@ Route::post('register', 'Api\UserController@register');
 Route::group(['middleware' => ['auth:api','cors']], function(){
 
     // Category Routes
-    Route::post('category/all','Api\CategoryController@index');
+    Route::post('category','Api\CategoryController@index');
     Route::post('category/create','Api\CategoryController@create');
     Route::post('category/update/{id}','Api\CategoryController@update');
+    Route::post('category/delete/{id}','Api\CategoryController@destroy');
 
     // Product Routes
-    Route::post('product/all','Api\ProductController@index');
+    Route::post('product','Api\ProductController@index');
     Route::post('product/create','Api\ProductController@create');
     Route::post('product/update/{id}','Api\ProductController@update');
+    Route::post('product/delete/{id}','Api\ProductController@destroy');
+
 
     // Client Routes
-    Route::post('client/all','Api\ClientController@index');
+    Route::post('client','Api\ClientController@index');
     Route::post('client/create','Api\ClientController@create');
     Route::post('client/update/{id}','Api\ClientController@update');
+    Route::post('client/delete/{id}','Api\ClientController@destroy');
 
     // Questionnaire Route
     Route::post('questionnaire/create','Api\QuestionnaireController@store');
+
+    // User Route
+    Route::post('user','Api\UserController@index');
 
 });
 

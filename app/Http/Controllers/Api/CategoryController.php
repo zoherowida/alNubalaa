@@ -71,9 +71,15 @@ class CategoryController extends Controller
         }
     }
 
-    public function destroy(Categoy $id){
-        $category = $id->delete();
-        return response()->json(['status' => 200, 'message' => 'delete','data' => ''], 200);
+    public function destroy($id){
+        try {
+            $category = Category::find($id)->delete();
+            return response()->json(['status' => 200, 'message' => 'delete','data' => ''], 200);
+
+        }
+        catch (\Exception $e){
+            return response()->json(['status' => 409,'message' => $e], 409);
+        }
     }
 
 

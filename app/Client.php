@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string location
  * @property string latLong
  */
+
 class Client extends Model
 
 {

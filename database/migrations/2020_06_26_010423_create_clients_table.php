@@ -25,7 +25,7 @@ class CreateClientsTable extends Migration
             $table->string('latLong');
             $table->integer('AddBy');
             $table->timestamps();
-                            $table->softDeletes();
+            $table->softDeletes();
 
         });
     }

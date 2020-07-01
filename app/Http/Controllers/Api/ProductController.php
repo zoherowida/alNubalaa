@@ -86,9 +86,15 @@ class ProductController extends Controller
         }
     }
 
-    public function destroy(Product $id){
-        $product = $id->delete();
-        return response()->json(['status' => 200, 'message' => 'delete','data' => ''], 200);
+    public function destroy($id){
+        try {
+            $product = Product::find($id)->delete();
+            return response()->json(['status' => 200, 'message' => 'delete','data' => ''], 200);
+
+        }
+        catch (\Exception $e){
+            return response()->json(['status' => 409,'message' => $e], 409);
+        }
     }
 
 }

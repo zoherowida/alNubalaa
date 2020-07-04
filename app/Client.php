@@ -70,7 +70,7 @@ class Client extends Model
     }
 
     public function questionnaire() {
-        return $this->hasMany('App\Questionnaire','clientId','id');
+        return $this->hasMany('App\questionnaire','clientId','id');
     }
 
 }

@@ -18,7 +18,7 @@ class CreateQuestionnairesTable extends Migration
             $table->integer('clientId');
             $table->integer('productId');
             $table->string('price');
-            $table->number('discount');
+            $table->integer('discount');
             $table->timestamps();
             $table->softDeletes();
         });

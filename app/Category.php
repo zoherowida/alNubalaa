@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @package App
  *
  * @property string name
+ * @property int available
  */
 class Category extends Model
 

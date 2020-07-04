@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string price
  * @property string clientId
  * @property string discount
+ * @property string productName
  */
 
 class questionnaire extends Model
@@ -23,6 +24,21 @@ class questionnaire extends Model
     protected $table = 'questionnaires';
     protected $fillable = ['name','productId', 'price','clientId','discount'];
 
+    protected $appends = [
+        'productName',
+    ];
+
+    public function getProductNameAttribute(){
+
+        $name = Product::withTrashed()->find($this->productId);
+        if($name){
+            return $name->name;
+
+        } else {
+            return 'N/Y';
+        }
+
+    }
 
     public function product()
     {

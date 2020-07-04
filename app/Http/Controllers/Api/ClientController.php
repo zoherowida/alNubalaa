@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\StatusApi;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -13,11 +14,11 @@ class ClientController extends Controller
     public function index(Request $request){
 
         try {
-            $client = Client::with('user')->orderBy('id', 'desc')->get();
-            return response()->json(['status' => 200,'message' => 'success','data' => $client], 200);
+            $client = Client::with(['user','questionnaire'])->orderBy('id', 'desc')->get();
+            return response()->json(['status' => StatusApi::Selected,'message' => 'success','data' => $client], 200);
 
         } catch(\Exception $e){
-            return response()->json(['status' => 409,'message' => $e], 409);
+            return response()->json(['status' => StatusApi::Exception,'message' => $e], 409);
         }
     }
 
@@ -30,19 +31,19 @@ class ClientController extends Controller
             'latLong' => 'required',
         ]);
         if ($validator->fails()) {
-            return response()->json(['status'=> 400, 'error'=>$validator->errors()], 400);
+            return response()->json(['status'=> StatusApi::ErrorInRequest, 'error'=>$validator->errors()], 400);
         }
 
         try {
             $input = $request->all();
             $input['AddBy'] = Auth::user()->id;
             $client = Client::create($input);
-            return response()->json(['status' => 200,'message' => 'created', 'data' => $client], 201);
+            return response()->json(['status' => StatusApi::Created,'message' => 'created', 'data' => $client], 201);
         }
         catch(\Exception $e){
 
             //return error message
-            return response()->json(['status' => 409,'message' => $e], 409);
+            return response()->json(['status' => StatusApi::Exception,'message' => $e], 409);
 
         }
     }
@@ -59,7 +60,7 @@ class ClientController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['status'=> 400, 'error'=>$validator->errors()], 400);
+            return response()->json(['status'=> StatusApi::ErrorInRequest, 'error'=>$validator->errors()], 400);
         }
 
         try {
@@ -74,12 +75,12 @@ class ClientController extends Controller
                     'location'=>$request->input('location'),
                     'latLong'=>$request->input('latLong'),
                 ]);
-            return response()->json(['status' => 200,'message' => 'updated', 'data' => $client], 201);
+            return response()->json(['status' => StatusApi::Updated,'message' => 'updated', 'data' => $client], 201);
         }
         catch(\Exception $e){
 
             //return error message
-            return response()->json(['status' => 409,'message' => $e], 409);
+            return response()->json(['status' => StatusApi::Exception,'message' => $e], 409);
 
         }
     }
@@ -87,11 +88,11 @@ class ClientController extends Controller
     public function destroy($id){
         try {
             $client = Client::find($id)->delete();
-            return response()->json(['status' => 200, 'message' => 'delete','data' => ''], 200);
+            return response()->json(['status' => StatusApi::Deleted, 'message' => 'delete','data' => ''], 200);
 
         }
         catch (\Exception $e){
-            return response()->json(['status' => 409,'message' => $e], 409);
+            return response()->json(['status' => StatusApi::Exception,'message' => $e], 409);
         }
     }
 

@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\StatusApi;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Vali2dator;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -16,12 +17,12 @@ class UserController extends Controller
 
     public function index() {
         try {
-            $user = User::get();
-            return response()->json(['status'=> $this-> successStatus,'message'=>'success', 'data' => $user], $this-> successStatus);
+            $user = User::orderBy('id', 'desc')->get();
+            return response()->json(['status'=> StatusApi::Selected,'message'=>'success', 'data' => $user], $this-> successStatus);
 
         }
         catch(\Exception $e){
-            return response()->json(['status' => 409,'message' => $e], 409);
+            return response()->json(['status' => StatusApi::Exception,'message' => $e], 409);
         }
     }
 
@@ -35,7 +36,7 @@ class UserController extends Controller
             $user = Auth::user();
             $success['token'] =  $user->createToken('MyApp')-> accessToken;
             $success['role'] =  $user->role_id;
-            return response()->json(['status'=> $this-> successStatus,'message'=>'success', 'data' => $success], $this-> successStatus);
+            return response()->json(['status'=> StatusApi::SuccessLogin,'message'=>'success', 'data' => $success], $this-> successStatus);
 
         }
         else{
@@ -57,16 +58,17 @@ class UserController extends Controller
             'phoneNumber' => 'required|unique:users',
             'password' => 'required',
             'c_password' => 'required|same:password',
+            'role_id' => 'required'
         ]);
         if ($validator->fails()) {
-            return response()->json(['status'=> 400, 'error'=>$validator->errors()], 400);
+            return response()->json(['status'=> StatusApi::ErrorInRequest, 'error'=>$validator->errors()], 400);
         }
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
         $success['token'] =  $user->createToken('MyApp')-> accessToken;
         $success['name'] =  $user->name;
-        return response()->json(['status'=> $this-> successStatus, 'success'=>$success], $this-> successStatus);
+        return response()->json(['status'=> StatusApi::Created, 'success'=>$success], $this-> successStatus);
     }
     /**
      * details api

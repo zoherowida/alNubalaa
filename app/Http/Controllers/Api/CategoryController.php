@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\StatusApi;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Category;
@@ -13,10 +14,10 @@ class CategoryController extends Controller
 
         try {
             $category = Category::orderBy('id', 'desc')->get();
-            return response()->json(['status' => 200,'message' => 'success','data' => $category], 200);
+            return response()->json(['status' => StatusApi::Selected,'message' => 'success','data' => $category], 200);
 
         } catch(\Exception $e){
-            return response()->json(['status' => 409,'message' => $e], 409);
+            return response()->json(['status' => StatusApi::Exception,'message' => $e], 409);
         }
     }
 
@@ -26,7 +27,7 @@ class CategoryController extends Controller
             'name' => 'required|string',
         ]);
         if ($validator->fails()) {
-            return response()->json(['status'=> 400, 'error'=>$validator->errors()], 400);
+            return response()->json(['status'=> StatusApi::Exception, 'error'=>$validator->errors()], 400);
         }
 
         try {
@@ -36,12 +37,12 @@ class CategoryController extends Controller
             $category->save();
 
             //return successful response
-            return response()->json(['status' => 200,'message' => 'create', 'data' => $category], 201);
+            return response()->json(['status' => StatusApi::Created,'message' => 'create', 'data' => $category], 200);
         }
         catch(\Exception $e){
 
             //return error message
-            return response()->json(['status' => 409,'message' => $e], 409);
+            return response()->json(['status' => StatusApi::Exception,'message' => $e], 409);
 
         }
     }
@@ -51,7 +52,7 @@ class CategoryController extends Controller
             'name' => 'required|string',
         ]);
         if ($validator->fails()) {
-            return response()->json(['status'=> 400, 'error'=>$validator->errors()], 400);
+            return response()->json(['status'=> StatusApi::ErrorInRequest, 'error'=>$validator->errors()], 400);
         }
 
         try {
@@ -61,12 +62,12 @@ class CategoryController extends Controller
             $category->save();
 
             //return successful response
-            return response()->json(['status' => 200,'message' => 'update', 'data' => $category], 201);
+            return response()->json(['status' => StatusApi::Updated,'message' => 'update', 'data' => $category], 200);
         }
         catch(\Exception $e){
 
             //return error message
-            return response()->json(['status' => 409,'message' => $e], 409);
+            return response()->json(['status' => StatusApi::Exception,'message' => $e], 409);
 
         }
     }
@@ -74,13 +75,26 @@ class CategoryController extends Controller
     public function destroy($id){
         try {
             $category = Category::find($id)->delete();
-            return response()->json(['status' => 200, 'message' => 'delete','data' => ''], 200);
+            return response()->json(['status' => StatusApi::Deleted, 'message' => 'delete','data' => ''], 200);
 
         }
         catch (\Exception $e){
-            return response()->json(['status' => 409,'message' => $e], 409);
+            return response()->json(['status' => StatusApi::Exception,'message' => $e], 409);
         }
     }
 
+    public function status($id){
+        try {
+            $category = Category::find($id);
+            $status = 0;
+            $category->status === 1 ? $status = 2 : $status = 1 ;
+            $category->status = $status;
+            $category->save();
+            return response()->json(['status' => StatusApi::ChangeStatus,'message' => 'success','data' => $category], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => StatusApi::Exception,'message' => $e], 409);
+
+        }
+    }
 
 }

@@ -69,4 +69,8 @@ class Client extends Model
         return $this->belongsTo('App\User', 'AddBy');
     }
 
+    public function questionnaire() {
+        return $this->hasMany('App\Questionnaire','clientId','id');
+    }
+
 }

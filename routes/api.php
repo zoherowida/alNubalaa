@@ -1,6 +1,7 @@
 <?php
 
-header('Access-Control-Allow-Origin: http://localhost:8003');
+//header('Access-Control-Allow-Origin: http://localhost:8006');
+header('Access-Control-Allow-Origin: http://localhost');
 header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: *,x-xsrf-token,token,content-type');
@@ -40,12 +41,14 @@ Route::group(['middleware' => ['auth:api','cors']], function(){
     Route::post('category/create','Api\CategoryController@create');
     Route::post('category/update/{id}','Api\CategoryController@update');
     Route::post('category/delete/{id}','Api\CategoryController@destroy');
+    Route::post('category/changeStatus/{id}','Api\CategoryController@status');
 
     // Product Routes
     Route::post('product','Api\ProductController@index');
     Route::post('product/create','Api\ProductController@create');
     Route::post('product/update/{id}','Api\ProductController@update');
     Route::post('product/delete/{id}','Api\ProductController@destroy');
+    Route::post('product/changeStatus/{id}','Api\ProductController@status');
 
 
     // Client Routes
@@ -60,6 +63,7 @@ Route::group(['middleware' => ['auth:api','cors']], function(){
     // User Route
     Route::post('user','Api\UserController@index');
 
+    Route::post('statistics','Api\HomeController@statistics');
 });
 
 

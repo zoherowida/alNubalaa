@@ -20,6 +20,7 @@ class CreateProductsTable extends Migration
             $table->string('sellingPrice');
             $table->string('wholesalePrice');
             $table->integer('subCategory');
+            $table->integer('status')->default(1);
             $table->timestamps();
             $table->softDeletes();
 

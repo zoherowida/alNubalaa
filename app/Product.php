@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property double wholesalePrice
  * @property double sellingPrice
  * @property int subCategory
-
+ * @property int available
  */
 
 class Product extends Model
